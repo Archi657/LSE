@@ -1,10 +1,8 @@
-# Makefile
-
 CXX = g++
 CXXFLAGS = -std=c++20
 TARGET = lsev
-SOURCES = $(wildcard *.cpp)
-BINDIR = $(HOME)/.local/bin
+SOURCES = $(wildcard src/*.cpp)
+BINDIR = /usr/bin/
 
 all: $(TARGET)
 

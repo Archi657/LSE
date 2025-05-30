@@ -10,6 +10,8 @@
 #include <sys/types.h>
 #include <filesystem>
 
+#include <format>
+#include <chrono>
 int listFiles(const CLIOptions& options) {
     std::string resolvedPath;
 
@@ -32,7 +34,7 @@ int listFiles(const CLIOptions& options) {
         return -1;
     }
 
-    std::cout << BOLD << "Listing: " << std::filesystem::absolute(resolvedPath) << "\n" << RESET;
+    std::cout << BOLD << "Listing: " << std::filesystem::canonical(resolvedPath) << "\n" << RESET;
 
     struct dirent* entry;
     std::string spacer = options.longFormat ? "\n" : " ";
@@ -56,9 +58,11 @@ int listFiles(const CLIOptions& options) {
 
         // Special case: hidden folders "." and ".."
         if (S_ISDIR(fileStat.st_mode) && (fileName == "." || fileName == "..")) {
-            std::cout << BOLD << MAGENTA << HIDDEN << fileName << spacer << RESET;
+           //std::cout << BOLD << MAGENTA << HIDDEN << fileName << spacer << RESET;
+           display = MAGENTA HIDDEN + fileName + RESET;
         }else if (S_ISDIR(fileStat.st_mode)) {
-            std::cout << BOLD << MAGENTA << FOLDER << fileName << spacer << RESET;
+           //std::cout << BOLD << MAGENTA << FOLDER << fileName << spacer << RESET;
+           display = MAGENTA FOLDER + fileName + RESET; 
         }else{
             std::string extension;
             size_t dotPos = fileName.find_last_of('.');
@@ -103,8 +107,11 @@ int listFiles(const CLIOptions& options) {
                 << " " << EVERYONE << BOLD << "->"
                 << ((fileStat.st_mode & S_IROTH) ? READ : DENIED)
                 << ((fileStat.st_mode & S_IWOTH) ? WRITE: DENIED)
-                << ((fileStat.st_mode & S_IXOTH) ? EXECUTE : DENIED);
-            std::cout << " " << display ; 
+                << ((fileStat.st_mode & S_IXOTH) ? EXECUTE : DENIED) << RESET;
+            std::filesystem::file_time_type ftime = std::filesystem::last_write_time(fullPath);
+            std::cout << CALENDAR << " " << BOLD << std::format("{:%Y/%m/%d}",ftime) << RESET;
+            std::cout << TIME << BOLD << std::format("{:%H:%M}",ftime) << RESET;
+            std::cout << " "  << BOLD << display << RESET; 
             std::cout << "\n";
         } else {
             std::cout << BOLD << display << spacer << RESET;
