@@ -23,3 +23,10 @@
 #define TIME "\u23F3"
 #define CALENDAR "\U0001F4C5"  // 📅
 
+#define HEADERS "\U0001F4D1 "      // 📑 Headers
+#define STYLES  "\U0001F3A8 "      // 🎨 Styles
+#define DATA    "\U0001F4CA "      // 📊 Data
+#define CONFIG  "\U0001F9EA "      // 🧪 Config
+#define SCRIPTS "\U0001F4D4 "      // 📔 Scripts
+#define LOG     "\U0001F4D0 "      // 📐 Logs
+
